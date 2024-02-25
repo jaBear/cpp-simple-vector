@@ -69,8 +69,7 @@ public:
     
     SimpleVector& operator=(SimpleVector &&rhs) {
         if (*this != rhs || !rhs.IsEmpty()) {
-            SimpleVector tmp = std::move(rhs);
-            swap(tmp);
+            swap(rhs);
         }
             return *this;
     }
@@ -106,12 +105,14 @@ public:
 
     // Возвращает константную ссылку на элемент с индексом index
     const Type& operator[](size_t index) const noexcept {
+        assert(index < size_);
         return new_array[index];
     }
 
     // Возвращает константную ссылку на элемент с индексом index
     // Выбрасывает исключение std::out_of_range, если index >= size
     Type& At(size_t index) {
+        assert(index < size_);
         if (!(index >= size_)) {
             return new_array[index];
         } else {
@@ -234,7 +235,7 @@ public:
     // Если перед вставкой значения вектор был заполнен полностью,
     // вместимость вектора должна увеличиться вдвое, а для вектора вместимостью 0 стать равной 1
     Iterator Insert(ConstIterator pos, const Type& value) {
-        assert(begin() <= pos && pos <= end());
+        assert(pos >= begin() && pos <= end());
         auto gap = std::distance(begin(), Iterator(pos));
         if (pos == begin() + size_) {
             PushBack(value);
@@ -257,6 +258,7 @@ public:
         }
     
     Iterator Insert(ConstIterator pos, Type &&value) {
+        assert(pos >= begin() && pos <= end());
         auto gap = std::distance(begin(), Iterator(pos));
         if (pos == begin() + size_) {
             PushBack(std::move(value));
@@ -289,6 +291,7 @@ public:
 
     // Удаляет элемент вектора в указанной позиции
     Iterator Erase(ConstIterator pos) {
+        assert(pos >= begin() && pos < end());
         auto gap = std::distance(begin(), Iterator(pos));
         std::move(begin() + gap + 1, end(), begin() + gap);
         --size_;
@@ -355,4 +358,3 @@ inline bool operator>=(const SimpleVector<Type> &lhs, const SimpleVector<Type> &
 {
     return !(lhs < rhs);
 }
-

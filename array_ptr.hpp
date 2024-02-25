@@ -31,7 +31,8 @@ public:
     ArrayPtr& operator=(const ArrayPtr&) = delete;
 
     ArrayPtr(ArrayPtr&& other) {
-        *this = std::move(other);
+        swap(other);
+        other.raw_ptr_ = nullptr;
     }
 
     ArrayPtr& operator=(ArrayPtr&& rhs) {
