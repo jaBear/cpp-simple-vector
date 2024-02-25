@@ -14,6 +14,10 @@ public:
     size_t capacity;
 };
 
+ReserveProxyObj Reserve(size_t capacity_to_reserve) {
+    return ReserveProxyObj(capacity_to_reserve);
+}
+
 template <typename Type>
 class SimpleVector {
 public:
@@ -351,3 +355,4 @@ inline bool operator>=(const SimpleVector<Type> &lhs, const SimpleVector<Type> &
 {
     return !(lhs < rhs);
 }
+
